@@ -5,13 +5,13 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+ 
 }
 
 model User {
@@ -43,6 +43,7 @@ model Trigger{
 model AvailableTriggers{
   id        String @id @default(uuid())
   name      String
+  image     String @default("/images/question.png")
   triggers  Trigger[]
 }
 
@@ -59,6 +60,7 @@ model Action{
 model AvailableAction{
   id        String @id @default(uuid())
   name      String
+  image     String @default("/images/question.png")
   actions   Action[]
 }
 

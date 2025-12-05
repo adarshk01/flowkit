@@ -12,7 +12,7 @@ export const SigninData = z.object({
 });
 
 export const zapData = z.object({
-  availableTriggersId: z.string(),
+  availableTriggerId: z.string(),
   triggerMetaData: z.any().optional(),
   actions: z.array(
     z.object({

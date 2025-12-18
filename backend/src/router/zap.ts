@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "./middleware";
 import { zapData } from "../types";
 import { prismaClient } from "../db";
+// import { Prisma } from "../generated/prisma/client";
 // import { PrismaClient } from "@prisma/client";
 
 const router = Router();
@@ -10,26 +11,26 @@ router.post("/", authMiddleware, async (req, res) => {
   //@ts-ignore
   const id: string = req.id;
   const body = req.body;
-  console.log(body);
+
   const parsedData = zapData.safeParse(body);
 
   if (!parsedData.success) {
-    console.log("control reaches here");
     return res.status(411).json({
       message: "Incorrect inputs",
     });
   }
 
   const zapId = await prismaClient.$transaction(async (tx: any) => {
+    const newAct = parsedData.data.actions;
     const zap = await prismaClient.zap.create({
       data: {
         userId: parseInt(id),
         triggerId: "",
         actions: {
-          create: parsedData.data.actions.map((x, index) => ({
+          create: newAct.map((x, index) => ({
             actionId: x.availableActionId,
             sortingOrder: index,
-            // metadata: x.actionMetadata,
+            metadata: x.actionMetadata as any,
           })),
         },
       },
@@ -38,6 +39,7 @@ router.post("/", authMiddleware, async (req, res) => {
       data: {
         triggerId: parsedData.data.availableTriggerId,
         zapId: zap.id,
+        // metadata: parsedData.data.triggerMetadata,
       },
     });
     await tx.zap.update({

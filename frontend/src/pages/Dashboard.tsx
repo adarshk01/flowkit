@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Appbar } from "../components/Appbar";
 import { CreateBtn } from "../components/buttons/CreateBtn";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL, HOOKS_URL } from "../config";
 import { LinkBtn } from "../components/buttons/LinkBtn";
 import { useNavigate } from "react-router-dom";
 
@@ -91,11 +91,11 @@ export function Dashboard() {
 function Zaptable({ zaps }: { zaps: Zap[] }) {
   const navigate = useNavigate();
   return (
-    <div className="p-7 max-w-5xl w-full border-b border-blue-400/80 bg-[#202031]/30 rounded-2xl ">
-      <div className="flex ">
+    <div className="p-7 max-w-5xl w-full border-t border-b border-blue-400/80 bg-[#202031]/30 rounded-2xl ">
+      <div className="flex border-b pb-4 border-white/10">
         <div className="flex-1">Name</div>
         <div className="flex-1">ID</div>
-        <div className="flex-1">Created At</div>
+        <div className="flex-1">Webhook URL</div>
         <div className="flex-1 ">Go</div>
       </div>
 
@@ -116,7 +116,7 @@ function Zaptable({ zaps }: { zaps: Zap[] }) {
               ))}
             </div>
             <div className="flex-1">{z.id}</div>
-            <div className="flex-1">Nov 15, 2025</div>
+            <div className="flex-1">{`${HOOKS_URL}/hooks/catch/${z.userId}/${z.id}`}</div>
             <div className="flex-1">
               <LinkBtn
                 label={"Go"}

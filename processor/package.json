@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc -b && dist/index.js"
+    "dev": "tsc -b && node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
     "kafkajs": "^2.2.4",
-    "prisma": "^6.19.0"
+    "prisma": "^7.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.1"
   }
 }

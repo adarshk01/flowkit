@@ -1,4 +1,7 @@
 import { Kafka } from "kafkajs";
+import { PrismaClient } from "@prisma/client";
+
+const prismaClient = new PrismaClient();
 
 const TOPIC_NAME = "zap-events";
 
@@ -23,6 +26,27 @@ async function main() {
         offset: message.offset,
         value: message.value?.toString(),
       });
+
+      if (!message.value?.toString()) return;
+
+      const parsedValue = JSON.parse(message.value?.toString());
+
+      const zapRunId = parsedValue.zapRunId;
+      const stage = parsedValue.stage;
+
+      const zapRunDetails = await prismaClient.zapRun.findFirst({
+        where: {
+          id: zapRunId,
+        },
+        include: {
+          zap: {
+            include: {
+              actions: true,
+            },
+          },
+        },
+      });
+
       await new Promise((r) => setTimeout(r, 1000));
       await consumer.commitOffsets([
         {

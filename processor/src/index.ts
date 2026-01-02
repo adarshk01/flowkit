@@ -1,6 +1,7 @@
 import { prismaClient } from "./db";
+console.log("FILE IS LOADING");
 import { Kafka } from "kafkajs";
-
+import { PrismaClient } from "@prisma/client";
 const TOPIC_NAME = "zap-events";
 // const client = new PrismaClient();
 
@@ -10,8 +11,10 @@ const kafka = new Kafka({
 });
 
 async function main() {
+  console.log("control over here");
   const producer = kafka.producer();
   await producer.connect();
+
   while (1) {
     const pendingRows = await prismaClient.zapRunOutbox.findMany({
       where: {},
@@ -30,13 +33,16 @@ async function main() {
     await prismaClient.zapRunOutbox.deleteMany({
       where: {
         id: {
-          in: pendingRows.map((r: any) => r.id),
+          in: pendingRows.map((x: any) => x.id),
         },
       },
     });
+    await new Promise((r) => setTimeout(r, 3000));
   }
 }
 
-main();
+console.log("ABOUT TO CALL MAIN");
+main().catch(console.error);
+console.log("MAIN CALLED");
 
 //docker-kafka command: docker run -p 9092:9092 apache/kafka:4.1.1
